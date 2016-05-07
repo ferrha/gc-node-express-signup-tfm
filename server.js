@@ -5,11 +5,13 @@ var http = require('http');
 var path = require('path');
 var app = express();
 var projectId = process.env.GCLOUD_PROJECT;
+var keyFile = './keyFile.json';
 
 // Initialize gcloud
-var gcloud = require('gcloud')({
+var gcloud = require('gcloud');
+var options = {
   projectId: projectId
-});
+};
 
 if (keyFile) {
   options.keyFilename = keyFile;
