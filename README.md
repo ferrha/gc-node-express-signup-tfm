@@ -1,9 +1,5 @@
-# node-express-signup-tfm-master
-Repository with the code for the project to run in a local server. No Cloud solution.
+# gc-node-express-signup-tfm-master
+Repository with the code for the project to run in Google Cloud Compute Engine server.
 
 Environment variables needed:
-+ userAccount: the sender email account
-+ passAccount: the password of the sender email account
-
-TODO
-- Add async to signup execution and 200 code.
++ GCLOUD_PROJECT: Google Cloud project ID.
