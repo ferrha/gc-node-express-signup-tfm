@@ -5,19 +5,22 @@ var http = require('http');
 var path = require('path');
 var app = express();
 var projectId = process.env.GCLOUD_PROJECT;
-var keyFile = './TFM-keyFile.json';
+var keyFilename = './TFM-keyFile.json';
 
 // Initialize gcloud
-var gcloud = require('gcloud')({
-  projectId: projectId,
-  keyFilename: keyFile
-});
+var gcloud = require('gcloud');
 
 // Get a reference to the datastore component
-var datastore = gcloud.datastore();
+var datastore = gcloud.datastore({
+  projectId: projectId,
+  keyFilename: keyFilename
+});
 
 // Get a reference to the pubsub component
-var pubsub = gcloud.pubsub();
+var pubsub = gcloud.pubsub({
+  projectId: projectId,
+  keyFilename: keyFilename
+});
 
 // Get a reference to the topic name
 var topic = pubsub.topic('subscription');
