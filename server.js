@@ -4,6 +4,7 @@ var routes = require('./routes');
 var http = require('http');
 var path = require('path');
 var app = express();
+var nodemailer = require('nodemailer');
 var projectId = process.env.GCLOUD_PROJECT;
 var keyFilename = './TFM-keyFile.json';
 
@@ -16,14 +17,14 @@ var datastore = gcloud.datastore({
   keyFilename: keyFilename
 });
 
-// Get a reference to the pubsub component
-var pubsub = gcloud.pubsub({
-  projectId: projectId,
-  keyFilename: keyFilename
+// create reusable transporter object using the default SMTP transport
+var transporter = nodemailer.createTransport("SMTP", {
+  service: "Gmail",
+  auth: {
+    user: process.env.userAccount,
+    pass: process.env.userPassword
+  }
 });
-
-// Get a reference to the topic name
-var topic = pubsub.topic('subscription');
 
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
@@ -63,32 +64,25 @@ function signup (nameSubmitted, emailSubmitted, previewPreference) {
     if (err) {
       console.log('Error adding item to database: ', err);
     }
-      console.log('Form data added to database.');
+    console.log('Form data added to database.');
 
-      // Subscribe
-      pubsub.subscribe('subscription', 'newSubscriber', {
-        ackDeadlineSeconds: 90,
-        autoAck: true,
-        interval: 30
-      }, function(err, subscription, apiResponse) {
-        if (err) {
-          console.log('Error adding item to database: ', err);
-        }
-        console.log('Subscribed ' + subscription + ' - ' + apiResponse);
-      });
+    // setup e-mail data
+    var mailOptions = {
+      from: process.env.userAccount, // sender address
+      to: emailSubmitted, // list of receivers
+      subject: 'Subscribed to TFM', // Subject line
+      text: 'Thank you ' + nameSubmitted + ' for subscribe, you will receive new updates soon ;)'
+    };
 
-      // Send email
-      topic.publish({
-        data: 'Thank you ' + nameSubmitted + ' for subscribe, you will receive new updates soon ;)'
-      }, function(err) {
-        if(err){
-          console.log('Error sending email: ' + err);
-        }
-        console.log('Message sent successfully!');
-      });
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, function(err){
+      if(err){
+        return console.log('Error sending email: ' + err);
+      }
+      console.log('Message sent successfully!');
+    });
 
   });
-
 }
 
 http.createServer(app).listen(app.get('port'), function() {

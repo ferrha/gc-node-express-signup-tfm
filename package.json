@@ -8,6 +8,7 @@
   "dependencies": {
     "express": "3.4.0",
     "gcloud": "^0.32.0",
-    "jade": "*"
+    "jade": "*",
+    "nodemailer": "0.7.1"
   }
 }
