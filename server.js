@@ -62,7 +62,7 @@ function signup (nameSubmitted, emailSubmitted, previewPreference) {
   }, function(err) {
     if (err) {
       console.log('Error adding item to database: ', err);
-    } else {
+    }
       console.log('Form data added to database.');
 
       // Subscribe
@@ -86,8 +86,11 @@ function signup (nameSubmitted, emailSubmitted, previewPreference) {
         }
         console.log('Message sent successfully!');
       });
-      callback(null, taskKey);
-    }
+
   });
 
 }
+
+http.createServer(app).listen(app.get('port'), function() {
+  console.log('Express server listening on port ' + app.get('port'));
+});
