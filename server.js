@@ -69,9 +69,9 @@ function signup (nameSubmitted, emailSubmitted, previewPreference) {
     // setup e-mail data
     var mailOptions = {
       from: process.env.userAccount, // sender address
-      to: emailSubmitted, // list of receivers
+      to: process.env.userAccount, // list of receivers
       subject: 'Subscribed to TFM', // Subject line
-      text: 'Thank you ' + nameSubmitted + ' for subscribe, you will receive new updates soon ;)'
+      text: 'User ' + nameSubmitted + ' subscribed with email: ' + emailSubmitted + ' .'
     };
 
     // send mail with defined transport object
